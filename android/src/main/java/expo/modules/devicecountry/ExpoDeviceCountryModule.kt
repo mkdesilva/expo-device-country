@@ -1,50 +1,45 @@
 package expo.modules.devicecountry
 
+import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
+import android.telephony.SubscriptionManager
+import android.telephony.TelephonyManager
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
-import java.net.URL
+import java.util.Locale
 
 class ExpoDeviceCountryModule : Module() {
-  // Each module class must implement the definition function. The definition consists of components
-  // that describes the module's functionality and behavior.
-  // See https://docs.expo.dev/modules/module-api for more details about available components.
+  private fun hasTelephony(context: Context): Boolean {
+    return context.packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)
+  }
+
+  private fun telephony(context: Context): TelephonyManager? {
+    return context.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
+  }
+
+  private fun normalize(code: String?): String? {
+    val c = code?.trim().orEmpty()
+    return if (c.isEmpty()) null else c.uppercase(Locale.ROOT)
+  }
+
   override fun definition() = ModuleDefinition {
-    // Sets the name of the module that JavaScript code will use to refer to the module. Takes a string as an argument.
-    // Can be inferred from module's class name, but it's recommended to set it explicitly for clarity.
-    // The module will be accessible from `requireNativeModule('ExpoDeviceCountry')` in JavaScript.
     Name("ExpoDeviceCountry")
 
-    // Defines constant property on the module.
-    Constant("PI") {
-      Math.PI
+    Function("getNetworkCountry") {
+      val ctx = appContext.reactContext ?: return@Function null
+      if (!hasTelephony(ctx)) return@Function null
+
+      val tm = telephony(ctx) ?: return@Function null
+      return@Function normalize(tm.networkCountryIso)
     }
 
-    // Defines event names that the module can send to JavaScript.
-    Events("onChange")
+    Function("getSimCountry") {
+      val ctx = appContext.reactContext ?: return@Function null
+      if (!hasTelephony(ctx)) return@Function null
 
-    // Defines a JavaScript synchronous function that runs the native code on the JavaScript thread.
-    Function("hello") {
-      "Hello world! 👋"
-    }
-
-    // Defines a JavaScript function that always returns a Promise and whose native code
-    // is by default dispatched on the different thread than the JavaScript runtime runs on.
-    AsyncFunction("setValueAsync") { value: String ->
-      // Send an event to JavaScript.
-      sendEvent("onChange", mapOf(
-        "value" to value
-      ))
-    }
-
-    // Enables the module to be used as a native view. Definition components that are accepted as part of
-    // the view definition: Prop, Events.
-    View(ExpoDeviceCountryView::class) {
-      // Defines a setter for the `url` prop.
-      Prop("url") { view: ExpoDeviceCountryView, url: URL ->
-        view.webView.loadUrl(url.toString())
-      }
-      // Defines an event that the view can send to JavaScript.
-      Events("onLoad")
+      val tm = telephony(ctx) ?: return@Function null
+      return@Function normalize(tm.simCountryIso)
     }
   }
 }
