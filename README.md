@@ -56,10 +56,11 @@ Both methods return a two-letter uppercase country code or `null` if that datase
 
 ## API
 
-| Method                | Description                                                                                                                                                       | Return type | Platforms |
-| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | --------- | --------------------------------------------- |
-| `getSimCountry()`     | Reads the home carrier/SIM country. On iOS this uses `CoreTelephony`; on Android it uses `TelephonyManager#getSimCountryIso`. No additional permissions required. | `string     | null`     | iOS: available (SIM only); Android: available |
-| `getNetworkCountry()` | Reads the currently registered mobile network country. Returns `null` on devices without cellular service or on iOS, where the data is unavailable.               | `string     | null`     | iOS: not available; Android: available        |
+| Method                | Description                                                                                                                                                       | Return type         | Platforms                                  |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- | ------------------------------------------ |
+| `getSimCountry()`     | Reads the home carrier/SIM country. On iOS this uses `CoreTelephony`; on Android it uses `TelephonyManager#getSimCountryIso`. No additional permissions required. | `string \| null`    | iOS: available (SIM only); Android: available |
+| `getNetworkCountry()` | Reads the currently registered mobile network country. Returns `null` on devices without cellular service or on iOS, where the data is unavailable.               | `string \| null`    | iOS: not available; Android: available        |
+
 
 > **Note:** Web support is not available. The module can only be imported on native platforms.
 
