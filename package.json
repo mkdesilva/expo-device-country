@@ -1,6 +1,6 @@
 {
   "name": "expo-device-country",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "author": "mkdesilva <dev.mkdesilva@gmail.com> (mkdesilva)",
   "repository": "https://github.com/mkdesilva/expo-device-country",
   "main": "build/index.js",
