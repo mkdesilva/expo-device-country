@@ -1,0 +1,10 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "paths": {
+      "expo-device-country": ["../src/index"],
+      "expo-device-country/*": ["../src/*"]
+    }
+  }
+}
